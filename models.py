@@ -43,7 +43,7 @@ class baselineLSTM(nn.Module):
         output = self.hidden2charoh(lstm_out.view(self.output_dim, -1))
         
         print("forward out shape", output.shape) 
-        return nn.Softmax(output)
+        return output # don't need to apply activation function if we use crossEntropyLoss
                 
     def init_hidden(self):
         # Before we've done anything, we dont have any hidden state.
