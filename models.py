@@ -21,7 +21,7 @@ class baselineLSTM(nn.Module):
         self.lstm = nn.LSTM(input_size = config['input_dim'], hidden_size = config['hidden_dim'], num_layers = config['layers'], batch_first = True)
         
         # The linear layer that maps from hidden state space to character one hot encoding space
-        self.hidden2charoh = nn.Linear(self.hidden_dim, self.output_dim)
+        self.linear = nn.Linear(self.hidden_dim, self.output_dim)
         self.hidden = self.init_hidden()
         print("init from baselineLSTM")
         
@@ -40,10 +40,16 @@ class baselineLSTM(nn.Module):
         lstm out of the sequency torch.Size([50, 2075, 100])
         """
         lstm_out, self.hidden = self.lstm(sequence.cuda(), self.hidden)
+        lstm_out = self.linear(lstm_out)
+        
+        return lstm_out
+        
+        
+        
         # lstm out of the sequency torch.Size([50, 2075, 100])
-        output = self.hidden2charoh(lstm_out.reshape([lstm_out.size(0)*lstm_out.size(1), -1]).cuda())
-        output = output.view(sequence.shape[0], sequence.shape[1], -1)
-        return output # don't need to apply activation function if we use crossEntropyLoss during training
+#         output = self.hidden2charoh(lstm_out.reshape([lstm_out.size(0)*lstm_out.size(1), -1]).cuda())
+# #         output = output.view(sequence.shape[0], sequence.shape[1], -1)
+#         return output # don't need to apply activation function if we use crossEntropyLoss during training
                 
     def init_hidden(self):
         # Before we've done anything, we dont have any hidden state.
@@ -52,10 +58,8 @@ class baselineLSTM(nn.Module):
         # if we use one direction, num_direction equals 1
         # The axes semantics are (num_layers * num_direction, batch_size, hidden_dim)
         if self.config['cuda']:
-            print("cuda availabe")
             computing_device = torch.device("cuda")
         else:
-            print("cuda not availabe")
             computing_device = torch.device("cpu")
         return (torch.zeros(self.num_layers, self.batch_size, self.hidden_dim, device = computing_device),
                 torch.zeros(self.num_layers, self.batch_size, self.hidden_dim, device = computing_device))
