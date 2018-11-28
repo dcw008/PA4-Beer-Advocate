@@ -1,6 +1,6 @@
 cfg = {}
 cfg['input_dim'] = 217 # input dimension to LSTM, rating(1) + number_of_beer_style(104) + len_vocaubulary(112), 
-cfg['hidden_dim'] = 112 # hidden dimension for LSTM , TODO: need to confirm, the hidden_dim equals to the len of the vocabulary
+cfg['hidden_dim'] = 100 # hidden dimension for LSTM , TODO: need to confirm, the hidden_dim equals to the len of the vocabulary
 cfg['output_dim'] = 112 # output dimension of the model,  TODO: need to confirm, the output_dim equals to the len of the vocabulary
 cfg['layers'] = 2 # number of layers of LSTM
 cfg['dropout'] = 0.5 # dropout rate between two layers of LSTM; useful only when layers > 1; between 0 and 1
